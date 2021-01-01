@@ -1,0 +1,74 @@
+﻿@model IEnumerable<MontagemCurriculo.Models.Curriculo>
+
+@{
+    ViewData["Title"] = "Currículos cadastrados";
+}
+
+<h5>Currículos cadastrados</h5>
+
+<p>
+    <a asp-action="Create" class="btn btn-small blue darken-2">Novo currículo</a>
+</p>
+<table class="table table-striped hover highlight">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CurriculoId" class="btn btn-small blue darken-2">Atualizar</a> |
+                    <a asp-action="Details" asp-route-id="@item.CurriculoId" class="btn btn-small deep-purple darken-4">Detalhes</a> |
+                    <a class="btn btn-small red darken-4 modal-trigger" onclick="ExibirModal(@item.CurriculoId)">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $(".modal").modal();
+        });
+
+        function ExibirModal(id) {
+            $("#modal1").modal("open");
+
+            $(".btnConfirmar").on("click", function (e) {
+                $.ajax({
+                    method: "POST",
+                    url: "/Curriculos/Delete",
+                    data: { id },
+                    success: function () {
+                        alert('Exclusão feita com sucesso');
+                        location.reload();
+                    }
+                });
+            });
+        }
+    </script>
+
+}
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <h4>Confirmar exclusão</h4>
+        <p>Deseja prosseguir com a exclusão</p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close btn green accent-4">Não</a>
+        <a class="modal-close btn red accent-4 btnConfirmar">Sim</a>
+    </div>
+</div>
